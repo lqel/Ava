@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 🔥 新增：专属ICO图标（/A + HarmonyOS Sans字体） -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%22 y=%2250%22 font-size=%2260%22 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/A</text></svg>">
     <title>Home / Anthvia</title>
     <style>
         * {
@@ -33,7 +35,6 @@
             justify-content: center;
         }
 
-        /* 动画总时长7秒：2秒动画 + 5秒停顿 */
         .slash {
             display: inline-block;
             animation: slashSlant 7s ease-in-out infinite;
@@ -42,16 +43,12 @@
             backface-visibility: hidden;
         }
 
-        /* 核心：前2秒完整执行动画，后5秒纯停顿，无任何运动 */
         @keyframes slashSlant {
-            /* 0%~28.5% = 2秒：原有完整动画（飞出+飞回） */
             0%   { opacity: 1; transform: translate(0, 0) translateZ(0); }
             14%  { opacity: 1; transform: translate(0, 0) translateZ(0); }
             18%  { opacity: 0; transform: translate(15vw, -36vw) translateZ(0); }
             24%  { opacity: 0; transform: translate(-15vw, 36vw) translateZ(0); }
             28.5%{ opacity: 1; transform: translate(0, 0) translateZ(0); }
-            
-            /* 28.5%~100% = 5秒：纯静止停顿，等待下一次循环 */
             100% { opacity: 1; transform: translate(0, 0) translateZ(0); }
         }
 
