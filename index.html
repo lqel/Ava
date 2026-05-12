@@ -33,19 +33,25 @@
             justify-content: center;
         }
 
+        /* 动画总时长7秒：2秒动画 + 5秒停顿 */
         .slash {
             display: inline-block;
-            animation: slashSlant 2s ease-in-out infinite;
+            animation: slashSlant 7s ease-in-out infinite;
             will-change: transform, opacity;
             transform: translateZ(0);
             backface-visibility: hidden;
         }
 
+        /* 核心：前2秒完整执行动画，后5秒纯停顿，无任何运动 */
         @keyframes slashSlant {
-            0% { opacity: 1; transform: translate(0, 0) translateZ(0); }
-            50% { opacity: 1; transform: translate(0, 0) translateZ(0); }
-            65% { opacity: 0; transform: translate(15vw, -36vw) translateZ(0); }
-            85% { opacity: 0; transform: translate(-15vw, 36vw) translateZ(0); }
+            /* 0%~28.5% = 2秒：原有完整动画（飞出+飞回） */
+            0%   { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            14%  { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            18%  { opacity: 0; transform: translate(15vw, -36vw) translateZ(0); }
+            24%  { opacity: 0; transform: translate(-15vw, 36vw) translateZ(0); }
+            28.5%{ opacity: 1; transform: translate(0, 0) translateZ(0); }
+            
+            /* 28.5%~100% = 5秒：纯静止停顿，等待下一次循环 */
             100% { opacity: 1; transform: translate(0, 0) translateZ(0); }
         }
 
@@ -79,10 +85,8 @@
         Anthvia Limited
     </div>
     
-    <!-- 防爬虫邮箱容器 -->
     <div class="footer-text right-bottom" id="email"></div>
 
-    <!-- JS动态渲染邮箱，防爬虫 -->
     <script>
       document.getElementById("email").innerText = "ai" + "@" + "anthvia.com";
     </script>
