@@ -21,12 +21,32 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            -webkit-font-smoothing: antialiased;
         }
 
         .center-text {
             font-size: 8vw;
             color: #000000;
-            letter-spacing: 0.06em; /* 已调小文字间距 */
+            letter-spacing: 0.06em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slash {
+            display: inline-block;
+            animation: slashSlant 2s ease-in-out infinite;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        @keyframes slashSlant {
+            0% { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            50% { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            65% { opacity: 0; transform: translate(15vw, -36vw) translateZ(0); }
+            85% { opacity: 0; transform: translate(-15vw, 36vw) translateZ(0); }
+            100% { opacity: 1; transform: translate(0, 0) translateZ(0); }
         }
 
         .footer-text {
@@ -50,7 +70,9 @@
     </style>
 </head>
 <body>
-    <div class="center-text">ANTHV/A</div>
+    <div class="center-text">
+        ANTHV<span class="slash">/</span>A
+    </div>
     <div class="footer-text left-bottom">
         一点星尘（深圳）科技有限公司<br>
         Anthvia Limited
