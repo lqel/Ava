@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 🔥 新增：专属ICO图标（/A + HarmonyOS Sans字体） -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%22 y=%2250%22 font-size=%2260%22 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/A</text></svg>">
     <title>Home / Anthvia</title>
     <style>
@@ -33,10 +32,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            line-height: 1; /* 统一行高，核心对齐 */
         }
 
+        /* 🔥 仅修改这里：让/和英文高度/对齐完全一致 */
         .slash {
             display: inline-block;
+            vertical-align: top; /* 垂直对齐 */
+            line-height: inherit; /* 继承行高 */
+            height: 1em; /* 高度和字体等高 */
             animation: slashSlant 7s ease-in-out infinite;
             will-change: transform, opacity;
             transform: translateZ(0);
