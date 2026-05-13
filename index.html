@@ -101,7 +101,6 @@
             overflow: hidden;
         }
 
-        /* 🔥 极致柔边，完全融合看不到边界 */
         .photo {
             position: absolute;
             object-fit: cover;
@@ -133,11 +132,10 @@
     <script>
         document.getElementById("email").innerText = "contact" + "@" + "anthvia.com";
 
-        // 自动加载 a~n 14张图
+        // 🔥 自动加载全部 a-n 14张图片
         const images = [];
-        const start = 'a'.charCodeAt(0);
         for (let i = 0; i < 14; i++) {
-            images.push(`images/${String.fromCharCode(start + i)}.jpg`);
+            images.push(`images/${String.fromCharCode(97 + i)}.jpg`);
         }
 
         setTimeout(() => {
@@ -146,29 +144,28 @@
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 🔥 智能自适应：10张图 平均铺满全屏
+        // 🔥 全部14张 + 平均分布 + 自适应全屏
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
-            const total = 10;
-            const selected = images.sort(() => 0.5 - Math.random()).slice(0, total);
+            const total = images.length; // 14张全用
 
-            // 自动网格布局：平均铺满
-            const cols = Math.ceil(Math.sqrt(total));
+            // 自动网格 → 平均铺满
+            const cols = Math.ceil(Math.sqrt(total * 1.2));
             const rows = Math.ceil(total / cols);
             const cellW = 100 / cols;
             const cellH = 100 / rows;
 
-            // 🔥 自适应图片尺寸：自动适配屏幕，完美铺满
-            const imgSize = Math.max(window.innerWidth, window.innerHeight) / (Math.sqrt(total) * 0.8);
+            // 自适应图片大小
+            const imgSize = Math.max(window.innerWidth, window.innerHeight) / (Math.sqrt(total) * 0.75);
 
-            selected.forEach((src, index) => {
+            images.forEach((src, index) => {
                 const img = document.createElement('img');
                 img.src = src;
                 img.className = 'photo';
                 img.style.width = imgSize + 'px';
                 img.style.height = imgSize + 'px';
 
-                // 均匀分布
+                // 平均网格位置
                 const col = index % cols;
                 const row = Math.floor(index / cols);
                 const baseX = col * cellW + cellW * 0.5;
@@ -193,7 +190,7 @@
             initSmoothParallax();
         }
 
-        // 🔥 丝滑物理效果，完全不抽动
+        // 🔥 丝滑物理效果，无抖动
         function initSmoothParallax() {
             const photos = document.querySelectorAll('.photo');
             let mouseX = 0, mouseY = 0;
