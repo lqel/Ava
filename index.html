@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25 y=%2255%22 font-size=%2260%22 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/L</text></svg>">
     <title>LUO / LUO</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'HarmonyOS Sans Regular', 'HarmonyOS Sans', sans-serif;
-            font-weight: 400;
         }
 
         html, body {
@@ -22,10 +19,10 @@
             position: relative;
         }
 
+        /* 超级可爱圆润字体 */
         .center-text {
             font-size: 8vw;
-            color: #000000;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.1em;
             display: inline-flex;
             align-items: baseline;
             justify-content: center;
@@ -36,6 +33,22 @@
             transform: translate(-50%, -50%);
             transition: all 1.2s cubic-bezier(0.76, 0, 0.24, 1);
             z-index: 999;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-weight: 900;
+            
+            /* 渐变彩色文字 */
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: bgShift 8s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%{background-position: 0% 50%}
+            50%{background-position: 100% 50%}
+            100%{background-position: 0% 50%}
         }
 
         .center-text.moved {
@@ -45,34 +58,39 @@
             font-size: 1.8rem;
         }
 
+        /* 🔥 / 动画完全恢复 */
         .slash {
             display: inline-block;
-            clip-path: inset(12% 0 12% 0);
             animation: slashSlant 7s ease-in-out infinite;
-            will-change: transform, opacity;
-            transform: translateZ(0);
-            backface-visibility: hidden;
+            font-family: inherit;
         }
 
         @keyframes slashSlant {
-            0%   { opacity: 1; transform: translate(0, 0) translateZ(0); }
-            14%  { opacity: 1; transform: translate(0, 0) translateZ(0); }
-            18%  { opacity: 0; transform: translate(15vw, -36vw) translateZ(0); }
-            24%  { opacity: 0; transform: translate(-15vw, 36vw) translateZ(0); }
-            28.5%{ opacity: 1; transform: translate(0, 0) translateZ(0); }
-            100% { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            0%   { opacity: 1; transform: translate(0, 0); }
+            14%  { opacity: 1; transform: translate(0, 0); }
+            18%  { opacity: 0; transform: translate(15px, -36px); }
+            24%  { opacity: 0; transform: translate(-15px, 36px); }
+            28.5%{ opacity: 1; transform: translate(0, 0); }
+            100% { opacity: 1; transform: translate(0, 0); }
         }
 
-        /* 🔥 固定右下角 */
+        /* 右下角可爱彩色文字 */
         .right-bottom {
             position: absolute;
             right: 2rem;
             bottom: 2rem;
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 1;
             transition: opacity 1s ease;
-            color: #000;
+            font-family: 'Arial Rounded MT Bold', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-weight: 600;
+            
+            background: linear-gradient(45deg, #ff85a2, #74b6ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
+
         .right-bottom.hidden {
             opacity: 0;
             pointer-events: none;
@@ -94,10 +112,8 @@
             object-fit: cover;
             opacity: 0;
             transition: opacity 2s ease;
-            
-            -webkit-mask-image: radial-gradient(220% 220% at center, black 15%, transparent 70%);
-            mask-image: radial-gradient(220% 220% at center, black 15%, transparent 70%);
-            
+            -webkit-mask-image: radial-gradient(240% 240% at center, black 12%, transparent 75%);
+            mask-image: radial-gradient(240% 240% at center, black 12%, transparent 75%);
             transform-origin: center;
         }
 
@@ -111,9 +127,7 @@
         LUO<span class="slash">/</span>LUO
     </div>
 
-    <!-- 右下角文字 -->
     <div class="right-bottom">洛宝家的礼物相关..</div>
-
     <div class="photo-wrapper" id="photoWrapper"></div>
 
     <script>
@@ -131,12 +145,10 @@
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
             const total = images.length;
-
             const cols = Math.ceil(Math.sqrt(total * 1.2));
             const rows = Math.ceil(total / cols);
             const cellW = 100 / cols;
             const cellH = 100 / rows;
-
             const imgSize = Math.max(window.innerWidth, window.innerHeight) / (Math.sqrt(total) * 0.65);
 
             images.forEach((src, index) => {
@@ -158,7 +170,6 @@
                 img.style.left = posX + '%';
                 img.style.top = posY + '%';
                 img.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
-
                 wrapper.appendChild(img);
             });
 
