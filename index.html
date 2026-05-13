@@ -19,7 +19,6 @@
             position: relative;
         }
 
-        /* 锁定你要的 LUO 字体，绝对不动 */
         .center-text {
             font-size: 8vw;
             letter-spacing: 0.1em;
@@ -36,7 +35,7 @@
             font-family: "Comic Sans MS", "Arial Rounded MT Bold", "Helvetica Rounded", sans-serif;
             font-weight: 900;
             
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
+            background: linear-gradient(45deg, #ff99cc, #a0c4ff);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             background-clip: text;
@@ -61,7 +60,7 @@
             display: inline-block;
             font-family: "Comic Sans MS", "Arial Rounded MT Bold", sans-serif !important;
             animation: slashSlant 7s ease-in-out infinite;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #a1c4fd);
+            background: linear-gradient(45deg, #ff99cc, #a0c4ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -72,8 +71,8 @@
         @keyframes slashSlant {
             0%   { opacity: 1; transform: translate(0, 0); }
             14%  { opacity: 1; transform: translate(0, 0); }
-            18%  { opacity: 0; transform: translate(15vw, -36vw); }
-            24%  { opacity: 0; transform: translate(-15vw, 36vw); }
+            18%  { opacity: 0; transform: translate(15px, -36px); }
+            24%  { opacity: 0; transform: translate(-15px, 36px); }
             28.5%{ opacity: 1; transform: translate(0, 0); }
             100% { opacity: 1; transform: translate(0, 0); }
         }
@@ -98,11 +97,10 @@
             pointer-events: none;
         }
 
-        /* 按钮手机端不拥挤 */
         .nav-link {
             position: absolute;
             top: 52%;
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-family: "YouYuan", "幼圆", sans-serif !important;
             font-weight: 500;
             opacity: 0;
@@ -111,7 +109,7 @@
             text-decoration: none;
             color: #fff;
             z-index: 888;
-            padding: 12px 26px;
+            padding: 12px 28px;
             border-radius: 50px;
             background: linear-gradient(120deg, #ff99cc, #a0c4ff);
             box-shadow: 0 6px 15px rgba(255, 153, 204, 0.25);
@@ -120,13 +118,13 @@
             opacity: 1;
         }
         .nav-link:hover {
-            transform: scale(1.05);
+            transform: scale(1.06);
         }
         .nav-left {
-            left: 8%;
+            left: 12%;
         }
         .nav-right {
-            right: 8%;
+            right: 12%;
         }
 
         .photo-wrapper {
@@ -140,7 +138,6 @@
             overflow: hidden;
         }
 
-        /* 纯原图，无任何模糊透明 */
         .photo {
             position: absolute;
             object-fit: cover;
@@ -151,7 +148,7 @@
         }
 
         .photo.show {
-            opacity: 0.95;
+            opacity: 0.92;
         }
     </style>
 </head>
@@ -179,42 +176,39 @@
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 🔥 终极修复：全屏填满 + 所有设备适配 + 14张均匀不规则
+        // 高级随机铺满：四边角落都有、大小错落、所有设备自适应
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
-            const total = images.length;
-            const cols = 4;
-            const rows = Math.ceil(total / cols);
-            const cellW = 100 / cols;
-            const cellH = 100 / rows;
-            
-            // 自适应大小，保证全屏填满所有设备
-            const imgSize = Math.max(window.innerWidth, window.innerHeight) / 3.2;
 
-            for (let i = 0; i < total; i++) {
+            images.forEach((src, idx) => {
                 const img = document.createElement('img');
-                img.src = images[i];
+                img.src = src;
                 img.className = 'photo';
-                img.style.width = imgSize + 'px';
-                img.style.height = imgSize + 'px';
 
-                const col = i % cols;
-                const row = Math.floor(i / cols);
-                
-                const baseX = col * cellW + cellW * 0.5;
-                const baseY = row * cellH + cellH * 0.5;
-                
-                // 轻微随机，保持均匀又不规则
-                const randX = (Math.random() - 0.5) * cellW * 0.5;
-                const randY = (Math.random() - 0.5) * cellH * 0.5;
-                const rot = (Math.random() - 0.5) * 40;
+                // 大小错落：有大有小，更有层次
+                const baseSize = Math.min(window.innerWidth, window.innerHeight) / 2.5;
+                const size = baseSize * (0.65 + Math.random() * 0.55);
+                img.style.width = size + 'px';
+                img.style.height = size + 'px';
 
-                img.style.left = baseX + randX + '%';
-                img.style.top = baseY + randY + '%';
+                // 0~100% 全屏随机，强制铺满四个角落不留白
+                let x = Math.random() * 100;
+                let y = Math.random() * 100;
+
+                // 强制把一部分图片压到四边，保证屏幕填满
+                if(idx % 4 === 0) x = Math.random() * 25;
+                if(idx % 4 === 1) x = 75 + Math.random() * 25;
+                if(idx % 4 === 2) y = Math.random() * 25;
+                if(idx % 4 === 3) y = 75 + Math.random() * 25;
+
+                const rot = (Math.random() - 0.5) * 55;
+
+                img.style.left = x + '%';
+                img.style.top = y + '%';
                 img.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
-                
+
                 wrapper.appendChild(img);
-            }
+            });
 
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p => p.classList.add('show'));
@@ -246,7 +240,7 @@
                 my += (mouseY - my) * 0.1;
 
                 photos.forEach((img, i) => {
-                    const speed = 4 + i * 0.8;
+                    const speed = 5 + i * 0.7;
                     const moveX = mx * speed;
                     const moveY = my * speed;
                     const rot = parseFloat(img.style.transform.match(/rotate\((.*?)deg\)/)[1] || 0);
