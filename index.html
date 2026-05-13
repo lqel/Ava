@@ -60,7 +60,8 @@
             display: inline-block;
             font-family: "Comic Sans MS", "Arial Rounded MT Bold", sans-serif !important;
             animation: slashMove 7s ease-in-out infinite;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #a1c4fd);
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -96,6 +97,7 @@
             pointer-events: none;
         }
 
+        /* 🔥 🔥 🔥 按钮底色已改为和LOGO一模一样的渐变！🔥 🔥 🔥 */
         .nav-link {
             position: absolute;
             top: 58%;
@@ -110,7 +112,10 @@
             z-index: 888;
             padding: 12px 26px;
             border-radius: 50px;
-            background: linear-gradient(120deg, #ff99cc, #a0c4ff);
+            /* 和 LOGO 完全一样的渐变色 */
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffecd2, #a1c4fd);
+            background-size: 300% 300%;
+            animation: bgShift 8s ease infinite;
             box-shadow: 0 6px 15px rgba(255, 153, 204, 0.25);
         }
         .nav-link.show {
@@ -176,7 +181,7 @@
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 🔥 🔥 🔥 终极方案：强制避开左上角，100% 不会出现图片
+        // 终极方案：强制避开左上角，100% 不会出现图片
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
             const imgSize = Math.max(window.innerWidth, window.innerHeight) / 3.2;
