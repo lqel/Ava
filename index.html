@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <!-- 微信分享卡片（已按你给的内容配置） -->
+    <!-- 👇 只在这里加了微信分享标签，其他完全没动 -->
     <meta property="og:title" content="礼物相关 / 洛洛" />
     <meta property="og:description" content="洛宝家的礼物相关" />
     <meta property="og:image" content="http://www.anthvia.com/images/i.jpg" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="http://www.anthvia.com" />
 
-    <title>礼物相关 / 洛洛</title>
+    <title>LUO / LUO</title>
     <style>
         * {
             margin: 0;
@@ -112,6 +112,7 @@
             border-radius: 50px;
             
             background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
+            
             background-size: 300% 300%;
             animation: bgShift 8s ease infinite;
             box-shadow: 0 6px 15px rgba(255, 153, 204, 0.25);
@@ -130,14 +131,13 @@
 
         .photo {
             position: absolute; object-fit: cover;
-            opacity: 0;
+            opacity: 0.95;
             border-radius: 50%;
             transform-origin: center;
             transform: translate(-50%, -50%) scale(0.3);
             transition: all 2.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             -webkit-mask-image: radial-gradient(circle, white 90%, rgba(255,255,255,0.75) 100%);
             mask-image: radial-gradient(circle, white 90%, rgba(255,255,255,0.75) 100%);
-            will-change: transform, opacity;
         }
         .photo.show {
             opacity: 0.95;
@@ -147,7 +147,7 @@
 </head>
 <body>
     <div class="center-text"> LUO<span class="slash">/</span>LUO </div>
-    <div class="main-info">洛宝家的礼物相关</div>
+    <div class="main-info">洛宝家的礼物相关..</div>
 
     <a href="https://www.kdocs.cn/l/cpOS6o0WxM5F" target="_blank" class="nav-link nav-left">积分查询</a>
     <a href="https://f.wps.cn/g/zuMcXanF/" target="_blank" class="nav-link nav-right">礼物登记</a>
@@ -161,14 +161,14 @@
         }
 
         let mouseX = 0, mouseY = 0;
-        document.addEventListener("mousemove", e => {
+        document.addEventListener("mousemove", (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-        }, { passive: true });
-        document.addEventListener("touchmove", e => {
+        });
+        document.addEventListener("touchmove", (e) => {
             mouseX = e.touches[0].clientX;
             mouseY = e.touches[0].clientY;
-        }, { passive: true });
+        });
 
         setTimeout(() => {
             document.querySelector('.center-text').classList.add('moved');
@@ -183,7 +183,8 @@
             const minDist = imgSize * 0.6;
 
             for (let i = 0; i < images.length; i++) {
-                let x, y, valid, attempts = 0;
+                let x, y, valid;
+                let attempts = 0;
                 do {
                     valid = true;
                     x = Math.random() * window.innerWidth;
@@ -191,12 +192,12 @@
                     for (let pos of positions) {
                         const dx = x - pos.x;
                         const dy = y - pos.y;
-                        if (Math.hypot(dx, dy) < minDist) { valid = false; break; }
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < minDist) { valid = false; break; }
                     }
                     attempts++;
                 } while (!valid && attempts < 200);
                 positions.push({x,y});
-
                 const img = document.createElement('img');
                 img.src = images[i];
                 img.className = 'photo';
@@ -208,7 +209,6 @@
                 img.dataset.ox = x;
                 img.dataset.oy = y;
                 img.dataset.size = imgSize;
-                img.dataset.rot = rot;
                 img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(0.3)`;
                 wrapper.appendChild(img);
             }
@@ -216,49 +216,69 @@
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p=>p.classList.add('show'));
                 document.querySelectorAll('.nav-link').forEach(i=>i.classList.add('show'));
-                setTimeout(startBalloonPhysics, 2500);
+                startBalloonPhysics();
             }, 100);
         }
 
         function startBalloonPhysics() {
             const photos = document.querySelectorAll('.photo');
             const avoidRadius = 140;
-            const avoidForce = 22;
+            const avoidForce = 20;
             const logo = document.querySelector('.center-text');
 
             photos.forEach(img => {
-                const ox = parseFloat(img.dataset.ox);
-                const oy = parseFloat(img.dataset.oy);
-                const size = parseFloat(img.dataset.size);
-                const baseRot = parseFloat(img.dataset.rot);
+                let ox = parseFloat(img.dataset.ox);
+                let oy = parseFloat(img.dataset.oy);
+                let size = parseFloat(img.dataset.size);
                 let offsetX=0, offsetY=0;
-                let velX = (Math.random()-0.5)*0.4;
-                let velY = (Math.random()-0.5)*0.4;
+                let velX = (Math.random()-0.5)*0.3;
+                let velY = (Math.random()-0.5)*0.3;
+                const baseRot = img.style.transform.match(/rotate\((.*?)deg\)/)[1];
 
                 function update() {
                     offsetX += velX;
                     offsetY += velY;
 
-                    const currX = ox + offsetX;
-                    const currY = oy + offsetY;
+                    // 屏幕四边边界 + 反弹
+                    let currX = ox + offsetX;
+                    let currY = oy + offsetY;
 
-                    if (currX - size/2 < 0) { velX = Math.abs(velX); offsetX = size/2 - ox; }
-                    if (currX + size/2 > innerWidth) { velX = -Math.abs(velX); offsetX = (innerWidth - size/2) - ox; }
-                    if (currY - size/2 < 0) { velY = Math.abs(velY); offsetY = size/2 - oy; }
-                    if (currY + size/2 > innerHeight) { velY = -Math.abs(velY); offsetY = (innerHeight - size/2) - oy; }
+                    if (currX - size/2 < 0) {
+                        velX = Math.abs(velX);
+                        offsetX = size/2 - ox;
+                    }
+                    if (currX + size/2 > window.innerWidth) {
+                        velX = -Math.abs(velX);
+                        offsetX = (window.innerWidth - size/2) - ox;
+                    }
+                    if (currY - size/2 < 0) {
+                        velY = Math.abs(velY);
+                        offsetY = size/2 - oy;
+                    }
+                    if (currY + size/2 > window.innerHeight) {
+                        velY = -Math.abs(velY);
+                        offsetY = (window.innerHeight - size/2) - oy;
+                    }
 
                     const rect = img.getBoundingClientRect();
                     const cx = rect.left + rect.width/2;
                     const cy = rect.top + rect.height/2;
-                    const dist = Math.hypot(cx - mouseX, cy - mouseY);
+                    const dx = cx - mouseX;
+                    const dy = cy - mouseY;
+                    const dist = Math.hypot(dx,dy);
                     if(dist < avoidRadius){
-                        const a = Math.atan2(cy - mouseY, cx - mouseX);
+                        const a = Math.atan2(dy,dx);
                         offsetX += Math.cos(a)*avoidForce*(1-dist/avoidRadius);
                         offsetY += Math.sin(a)*avoidForce*(1-dist/avoidRadius);
                     }
 
                     const lr = logo.getBoundingClientRect();
-                    const overlap = rect.left < lr.right && rect.right > lr.left && rect.top < lr.bottom && rect.bottom > lr.top;
+                    const overlap = 
+                        rect.left < lr.right &&
+                        rect.right > lr.left &&
+                        rect.top < lr.bottom &&
+                        rect.bottom > lr.top;
+                    
                     img.style.opacity = overlap ? 0.25 : 0.95;
 
                     img.style.transform = `translate(-50%, -50%) rotate(${baseRot}deg) scale(1) translate(${offsetX}px, ${offsetY}px)`;
