@@ -123,7 +123,7 @@
 
         .photo {
             position: absolute; object-fit: cover;
-            opacity: 0.95;
+            opacity: 0;
             border-radius: 50%;
             transform-origin: center;
             transform: translate(-50%, -50%) scale(0.3);
@@ -201,14 +201,16 @@
                 img.dataset.ox = x;
                 img.dataset.oy = y;
                 img.dataset.size = imgSize;
+                img.dataset.rot = rot;
                 img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(0.3)`;
                 wrapper.appendChild(img);
-            });
+            }
 
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p=>p.classList.add('show'));
                 document.querySelectorAll('.nav-link').forEach(i=>i.classList.add('show'));
-                startBalloonPhysics();
+                
+                setTimeout(startBalloonPhysics, 2200);
             }, 100);
         }
 
@@ -222,21 +224,19 @@
                 let ox = parseFloat(img.dataset.ox);
                 let oy = parseFloat(img.dataset.oy);
                 let size = parseFloat(img.dataset.size);
+                let baseRot = parseFloat(img.dataset.rot);
                 let offsetX=0, offsetY=0;
                 let velX = (Math.random()-0.5)*0.4;
                 let velY = (Math.random()-0.5)*0.4;
-                const baseRot = img.style.transform.match(/rotate\((.*?)deg\)/)[1];
 
                 function update() {
-                    // 移动
                     offsetX += velX;
                     offsetY += velY;
 
-                    // 当前真实位置
                     let currX = ox + offsetX;
                     let currY = oy + offsetY;
 
-                    // 🔥 屏幕四边硬边界 + 弹性反弹（图片永远出不去）
+                    // 边界反弹
                     if (currX - size/2 < 0) {
                         velX = Math.abs(velX);
                         offsetX = (size/2) - ox;
@@ -267,7 +267,7 @@
                         offsetY += Math.sin(a)*avoidForce*(1-dist/avoidRadius);
                     }
 
-                    // 碰到LOGO变透明
+                    // LOGO 透明
                     const lr = logo.getBoundingClientRect();
                     const overlap = 
                         rect.left < lr.right &&
