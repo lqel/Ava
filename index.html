@@ -171,10 +171,11 @@
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
             const imgSize = Math.max(window.innerWidth, window.innerHeight) / 3.2;
-            const safeLeft = window.innerWidth * 0.32;
-            const safeTop = window.innerHeight * 0.22;
             const positions = [];
             const minDist = imgSize * 0.6;
+
+            // 全新干净禁区：微信竖屏完美保护LOGO
+            const SAFE_MARGIN = 160;
 
             for (let i = 0; i < images.length; i++) {
                 let x, y, valid;
@@ -185,7 +186,8 @@
                     x = Math.random() * window.innerWidth;
                     y = Math.random() * window.innerHeight;
 
-                    if (x < safeLeft && y < safeTop) {
+                    // 禁区：左上角 160px 范围内绝不生成图片
+                    if (x < SAFE_MARGIN && y < SAFE_MARGIN) {
                         valid = false;
                         continue;
                     }
@@ -224,51 +226,44 @@
             }, 100);
         }
 
-        // 🎈 最强禁区锁 + 气球物理
+        // 🎈 鼠标躲避 + 流畅动画（无卡顿）
         function startBalloonPhysics() {
             const photos = document.querySelectorAll('.photo');
-            const avoidRadius = 130;
-            const avoidForce = 18;
-            const safeLeft = window.innerWidth * 0.32;
-            const safeTop = window.innerHeight * 0.22;
-            const margin = 80;
+            const avoidRadius = 140;
+            const avoidForce = 20;
+            const SAFE_MARGIN = 160;
 
             photos.forEach(img => {
                 let ox = parseFloat(img.dataset.ox);
                 let oy = parseFloat(img.dataset.oy);
-                let x = 0, y = 0;
-                let vx = (Math.random() - 0.5) * 0.3;
-                let vy = (Math.random() - 0.5) * 0.3;
+                let offsetX = 0, offsetY = 0;
+                let velX = (Math.random() - 0.5) * 0.3;
+                let velY = (Math.random() - 0.5) * 0.3;
                 const baseRot = img.style.transform.match(/rotate\((.*?)deg\)/)[1];
 
                 function update() {
-                    x += vx;
-                    y += vy;
-                    if (Math.abs(x) > 12) vx *= -1;
-                    if (Math.abs(y) > 12) vy *= -1;
+                    // 自然漂浮
+                    offsetX += velX;
+                    offsetY += velY;
+                    if (Math.abs(offsetX) > 12) velX *= -1;
+                    if (Math.abs(offsetY) > 12) velY *= -1;
 
+                    // 鼠标躲避
                     const rect = img.getBoundingClientRect();
                     const cx = rect.left + rect.width / 2;
                     const cy = rect.top + rect.height / 2;
                     const dx = cx - mouseX;
                     const dy = cy - mouseY;
                     const dist = Math.hypot(dx, dy);
+
                     if (dist < avoidRadius) {
                         const angle = Math.atan2(dy, dx);
-                        x += Math.cos(angle) * avoidForce * (1 - dist / avoidRadius);
-                        y += Math.sin(angle) * avoidForce * (1 - dist / avoidRadius);
+                        offsetX += Math.cos(angle) * avoidForce * (1 - dist / avoidRadius);
+                        offsetY += Math.sin(angle) * avoidForce * (1 - dist / avoidRadius);
                     }
 
-                    const finalX = ox + x;
-                    const finalY = oy + y;
-
-                    // 🔥 最强锁：只要进禁区 → 直接弹回安全区
-                    if (finalX < safeLeft + margin && finalY < safeTop + margin) {
-                        x = 0;
-                        y = 0;
-                    }
-
-                    img.style.transform = `translate(-50%, -50%) rotate(${baseRot}deg) scale(1) translate(${x}px, ${y}px)`;
+                    // 应用位置
+                    img.style.transform = `translate(-50%, -50%) rotate(${baseRot}deg) scale(1) translate(${offsetX}px, ${offsetY}px)`;
                     requestAnimationFrame(update);
                 }
                 update();
