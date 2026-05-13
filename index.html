@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 100 100%22><text x=%2250%25 y=%2255%25 font-size=%2260%25 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/L</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25 y=%2255%22 font-size=%2260%22 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/L</text></svg>">
     <title>LUO / LUO</title>
     <style>
         * {
@@ -63,27 +63,15 @@
             100% { opacity: 1; transform: translate(0, 0) translateZ(0); }
         }
 
-        .footer-text {
-            position: absolute;
-            color: #000000;
-            bottom: 25%;
-            text-align: left;
-        }
-
-        .left-bottom {
-            left: 2rem;
-            font-size: 1.2rem;
-            opacity: 0;
-            line-height: 1.5;
-            pointer-events: none;
-        }
-
+        /* 🔥 固定右下角 */
         .right-bottom {
+            position: absolute;
             right: 2rem;
-            padding-top: 0.2em;
+            bottom: 2rem;
             font-size: 0.9rem;
             opacity: 1;
             transition: opacity 1s ease;
+            color: #000;
         }
         .right-bottom.hidden {
             opacity: 0;
@@ -123,24 +111,23 @@
         LUO<span class="slash">/</span>LUO
     </div>
 
+    <!-- 右下角文字 -->
     <div class="right-bottom">洛宝家的礼物相关..</div>
+
     <div class="photo-wrapper" id="photoWrapper"></div>
 
     <script>
-        // a-n 14张全图
         const images = [];
         for (let i = 0; i < 14; i++) {
             images.push(`images/${String.fromCharCode(97 + i)}.jpg`);
         }
 
-        // 5秒后LOGO移动 + 文字隐藏
         setTimeout(() => {
             document.querySelector('.center-text').classList.add('moved');
             document.querySelector('.right-bottom').classList.add('hidden');
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 14张全量铺满 + 随机角度
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
             const total = images.length;
@@ -182,7 +169,6 @@
             initSmoothParallax();
         }
 
-        // 鼠标/触屏物理跟随（无自动微动）
         function initSmoothParallax() {
             const photos = document.querySelectorAll('.photo');
             let mouseX = 0, mouseY = 0;
