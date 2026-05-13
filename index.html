@@ -203,7 +203,7 @@
                 img.dataset.size = imgSize;
                 img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(0.3)`;
                 wrapper.appendChild(img);
-            }
+            });
 
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p=>p.classList.add('show'));
@@ -232,15 +232,26 @@
                     offsetX += velX;
                     offsetY += velY;
 
-                    // 🔥 碰到屏幕边缘 → 反弹
+                    // 当前真实位置
                     let currX = ox + offsetX;
                     let currY = oy + offsetY;
 
-                    if (currX - size/2 < 0 || currX + size/2 > window.innerWidth) {
-                        velX *= -1;
+                    // 🔥 屏幕四边硬边界 + 弹性反弹（图片永远出不去）
+                    if (currX - size/2 < 0) {
+                        velX = Math.abs(velX);
+                        offsetX = (size/2) - ox;
                     }
-                    if (currY - size/2 < 0 || currY + size/2 > window.innerHeight) {
-                        velY *= -1;
+                    if (currX + size/2 > window.innerWidth) {
+                        velX = -Math.abs(velX);
+                        offsetX = (window.innerWidth - size/2) - ox;
+                    }
+                    if (currY - size/2 < 0) {
+                        velY = Math.abs(velY);
+                        offsetY = (size/2) - oy;
+                    }
+                    if (currY + size/2 > window.innerHeight) {
+                        velY = -Math.abs(velY);
+                        offsetY = (window.innerHeight - size/2) - oy;
                     }
 
                     // 鼠标躲避
