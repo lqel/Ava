@@ -19,7 +19,7 @@
             position: relative;
         }
 
-        /* 🔥 精准恢复：你要的【前一个版本】LUO字体 */
+        /* 🔥🔥🔥 锁定：你最后说要的【前一个字体】！绝对不动！ */
         .center-text {
             font-size: 8vw;
             letter-spacing: 0.1em;
@@ -36,7 +36,7 @@
             font-family: "Comic Sans MS", "Arial Rounded MT Bold", "Helvetica Rounded", sans-serif;
             font-weight: 900;
             
-            background: linear-gradient(45deg, #ff99cc, #a0c4ff);
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             background-clip: text;
@@ -61,7 +61,7 @@
             display: inline-block;
             font-family: "Comic Sans MS", "Arial Rounded MT Bold", sans-serif !important;
             animation: slashSlant 7s ease-in-out infinite;
-            background: linear-gradient(45deg, #ff99cc, #a0c4ff);
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #a1c4fd);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -72,8 +72,8 @@
         @keyframes slashSlant {
             0%   { opacity: 1; transform: translate(0, 0); }
             14%  { opacity: 1; transform: translate(0, 0); }
-            18%  { opacity: 0; transform: translate(15px, -36px); }
-            24%  { opacity: 0; transform: translate(-15px, 36px); }
+            18%  { opacity: 0; transform: translate(15vw, -36vw); }
+            24%  { opacity: 0; transform: translate(-15vw, 36vw); }
             28.5%{ opacity: 1; transform: translate(0, 0); }
             100% { opacity: 1; transform: translate(0, 0); }
         }
@@ -98,11 +98,11 @@
             pointer-events: none;
         }
 
-        /* 好看渐变按钮 保留 */
+        /* 按钮间距拉开（保留） */
         .nav-link {
             position: absolute;
             top: 52%;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-family: "YouYuan", "幼圆", sans-serif !important;
             font-weight: 500;
             opacity: 0;
@@ -111,7 +111,7 @@
             text-decoration: none;
             color: #fff;
             z-index: 888;
-            padding: 12px 28px;
+            padding: 12px 26px;
             border-radius: 50px;
             background: linear-gradient(120deg, #ff99cc, #a0c4ff);
             box-shadow: 0 6px 15px rgba(255, 153, 204, 0.25);
@@ -120,13 +120,13 @@
             opacity: 1;
         }
         .nav-link:hover {
-            transform: scale(1.06);
+            transform: scale(1.05);
         }
         .nav-left {
-            left: 15%;
+            left: 8%;
         }
         .nav-right {
-            right: 15%;
+            right: 8%;
         }
 
         .photo-wrapper {
@@ -140,7 +140,7 @@
             overflow: hidden;
         }
 
-        /* 图片模糊 保留 */
+        /* 图片：中间清晰 + 边缘模糊透明（保留） */
         .photo {
             position: absolute;
             object-fit: cover;
@@ -148,11 +148,13 @@
             border-radius: 50%;
             transition: opacity 2s ease;
             transform-origin: center;
-            filter: blur(1.5px);
+            -webkit-mask-image: radial-gradient(circle, black 65%, transparent 100%);
+            mask-image: radial-gradient(circle, black 65%, transparent 100%);
+            opacity: 0.85;
         }
 
         .photo.show {
-            opacity: 0.92;
+            opacity: 0.85;
         }
     </style>
 </head>
@@ -180,10 +182,10 @@
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 全屏乱序图片 保留
+        // 14张图片全屏铺满（保留）
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
-            const imgSize = Math.max(window.innerWidth, window.innerHeight) / 3.5;
+            const imgSize = Math.max(window.innerWidth, window.innerHeight) / 3.2;
 
             for (let i = 0; i < images.length; i++) {
                 const img = document.createElement('img');
