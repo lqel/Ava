@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%22 y=%2255%22 font-size=%2260%22 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/A</text></svg>">
+    
+    <title>Home / Anthvia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'HarmonyOS Sans Regular', 'HarmonyOS Sans', sans-serif;
+            font-weight: 400;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .center-text {
+            font-size: 8vw;
+            color: #000000;
+            letter-spacing: 0.06em;
+            display: inline-flex;
+            align-items: baseline;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .slash {
+            display: inline-block;
+            clip-path: inset(12% 0 12% 0);
+            animation: slashSlant 7s ease-in-out infinite;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        @keyframes slashSlant {
+            0%   { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            14%  { opacity: 1; transform: translate(0, 0) translateZ(0); }
+            18%  { opacity: 0; transform: translate(15vw, -36vw) translateZ(0); }
+            24%  { opacity: 0; transform: translate(-15vw, 36vw) translateZ(0); }
+            28.5%{ opacity: 1; transform: translate(0, 0) translateZ(0); }
+            100% { opacity: 1; transform: translate(0, 0) translateZ(0); }
+        }
+
+        .footer-text {
+            position: absolute;
+            color: #000000;
+            bottom: 25%;
+            text-align: left;
+        }
+
+        .left-bottom {
+            left: 2rem;
+            font-size: 1.2rem;
+            opacity: 0;
+            line-height: 1.5;
+        }
+
+        .right-bottom {
+            right: 2rem;
+            padding-top: 0.2em;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-text">
+        ANTHV<span class="slash">/</span>A
+    </div>
+
+    <div class="footer-text left-bottom">
+        一点星尘（深圳）科技有限公司<br>
+        Anthvia Limited
+    </div>
+    
+    <div class="footer-text right-bottom" id="email"></div>
+
+    <script>
+      document.getElementById("email").innerText = "contact" + "@" + "anthvia.com";
+    </script>
+</body>
+</html>
