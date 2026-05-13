@@ -130,7 +130,18 @@
             transition: all 2.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             -webkit-mask-image: radial-gradient(circle, white 90%, rgba(255,255,255,0.75) 100%);
             mask-image: radial-gradient(circle, white 90%, rgba(255,255,255,0.75) 100%);
+
+            /* 🔥 新增：超级温柔 呼吸 + 旋转动画 */
+            animation: photoFloat 12s ease-in-out infinite;
         }
+
+        /* 🔥 核心美化动画：超级柔！超级治愈！ */
+        @keyframes photoFloat {
+            0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            50%  { transform: translate(-50%, -50%) scale(1.04) rotate(2deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        }
+
         .photo.show {
             opacity: 0.95;
             transform: translate(-50%, -50%) scale(1);
