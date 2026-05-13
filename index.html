@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25 y=%2255%25 font-size=%2260%25 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/A</text></svg>">
-    <title>Home / Anthvia</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 100 100%22><text x=%2250%25 y=%2255%25 font-size=%2260%25 font-family=%22HarmonyOS Sans Regular%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22black%22>/L</text></svg>">
+    <title>LUO / LUO</title>
     <style>
         * {
             margin: 0;
@@ -101,7 +101,6 @@
             overflow: hidden;
         }
 
-        /* 🔥 终极柔化边缘：完全融合无边框 */
         .photo {
             position: absolute;
             object-fit: cover;
@@ -121,34 +120,27 @@
 </head>
 <body>
     <div class="center-text">
-        ANTHV<span class="slash">/</span>A
+        LUO<span class="slash">/</span>LUO
     </div>
 
-    <div class="footer-text left-bottom">
-        一点星尘（深圳）科技有限公司<br>
-        Anthvia Limited
-    </div>
-    
-    <div class="footer-text right-bottom" id="email"></div>
+    <div class="right-bottom">洛宝家的礼物相关..</div>
     <div class="photo-wrapper" id="photoWrapper"></div>
 
     <script>
-        document.getElementById("email").innerText = "contact@anthvia.com";
-
-        // 自动加载 a-n 全部14张图片
+        // a-n 14张全图
         const images = [];
         for (let i = 0; i < 14; i++) {
             images.push(`images/${String.fromCharCode(97 + i)}.jpg`);
         }
 
-        // 5秒后LOGO移动 + 隐藏邮箱
+        // 5秒后LOGO移动 + 文字隐藏
         setTimeout(() => {
             document.querySelector('.center-text').classList.add('moved');
             document.querySelector('.right-bottom').classList.add('hidden');
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 14张全量 + 平均铺满 + 随机角度
+        // 14张全量铺满 + 随机角度
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
             const total = images.length;
@@ -167,17 +159,13 @@
                 img.style.width = imgSize + 'px';
                 img.style.height = imgSize + 'px';
 
-                // 网格平均分布
                 const col = index % cols;
                 const row = Math.floor(index / cols);
                 const baseX = col * cellW + cellW * 0.5;
                 const baseY = row * cellH + cellH * 0.5;
 
-                // 随机位置偏移
                 const posX = baseX + (Math.random() - 0.5) * cellW * 0.4;
                 const posY = baseY + (Math.random() - 0.5) * cellH * 0.4;
-                
-                // 🔥 随机旋转角度 (-15° ~ 15°)
                 const rot = (Math.random() * 30) - 15;
 
                 img.style.left = posX + '%';
@@ -187,7 +175,6 @@
                 wrapper.appendChild(img);
             });
 
-            // 图片渐显
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p => p.classList.add('show'));
             }, 100);
@@ -195,7 +182,7 @@
             initSmoothParallax();
         }
 
-        // 🔥 纯鼠标/触屏物理跟随（无自动微动）
+        // 鼠标/触屏物理跟随（无自动微动）
         function initSmoothParallax() {
             const photos = document.querySelectorAll('.photo');
             let mouseX = 0, mouseY = 0;
@@ -223,7 +210,6 @@
                     const moveY = my * speed;
                     const rot = parseFloat(img.style.transform.match(/rotate\((.*?)deg\)/)[1] || 0);
                     
-                    // 只响应鼠标/触摸，无自动动画
                     img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) translate(${moveX}px, ${moveY}px)`;
                 });
                 requestAnimationFrame(animate);
