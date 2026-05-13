@@ -56,7 +56,6 @@
             font-size: 1.8rem;
         }
 
-        /* 🔥 最终修复：/ 完整显示，不截断、不缺失 */
         .slash {
             display: inline-block;
             font-family: 'Helvetica', 'Arial', sans-serif !important;
@@ -78,25 +77,31 @@
             100% { opacity: 1; transform: translate(0, 0); }
         }
 
-        .right-bottom {
+        /* 底部导航文字样式 */
+        .nav-link {
             position: absolute;
-            right: 2rem;
             bottom: 2rem;
             font-size: 1rem;
-            opacity: 1;
-            transition: opacity 1s ease;
             font-family: 'Arial Rounded MT Bold', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             font-weight: 600;
-            
+            opacity: 0;
+            transition: opacity 1.2s ease;
+            cursor: pointer;
+            text-decoration: none;
             background: linear-gradient(45deg, #ff85a2, #74b6ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            z-index: 888;
         }
-
-        .right-bottom.hidden {
-            opacity: 0;
-            pointer-events: none;
+        .nav-link.show {
+            opacity: 1;
+        }
+        .nav-left {
+            left: 2rem;
+        }
+        .nav-right {
+            right: 2rem;
         }
 
         .photo-wrapper {
@@ -130,7 +135,10 @@
         LUO<span class="slash">/</span>LUO
     </div>
 
-    <div class="right-bottom">洛宝家的礼物相关..</div>
+    <!-- 底部导航链接 -->
+    <a href="https://im.qq.com/" target="_blank" class="nav-link nav-left">积分查询</a>
+    <a href="https://www.baidu.com/" target="_blank" class="nav-link nav-right">礼物登记</a>
+
     <div class="photo-wrapper" id="photoWrapper"></div>
 
     <script>
@@ -141,7 +149,6 @@
 
         setTimeout(() => {
             document.querySelector('.center-text').classList.add('moved');
-            document.querySelector('.right-bottom').classList.add('hidden');
             setTimeout(initPhotos, 1000);
         }, 5000);
 
@@ -178,6 +185,8 @@
 
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p => p.classList.add('show'));
+                // 图片显示后 → 显示底部文字
+                document.querySelectorAll('.nav-link').forEach(item => item.classList.add('show'));
             }, 100);
 
             initSmoothParallax();
