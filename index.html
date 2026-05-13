@@ -146,6 +146,15 @@
             images.push(`images/${String.fromCharCode(97 + i)}.jpg`);
         }
 
+        let mouseX = 0, mouseY = 0;
+        let currentMouseX = 0, currentMouseY = 0;
+
+        // 鼠标监听
+        document.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
         setTimeout(() => {
             document.querySelector('.center-text').classList.add('moved');
             document.querySelector('.main-info').classList.add('hidden');
@@ -157,19 +166,41 @@
             const imgSize = Math.max(window.innerWidth, window.innerHeight) / 3.2;
             const safeLeft = window.innerWidth * 0.45;
             const safeTop = window.innerHeight * 0.35;
+            const positions = [];
+            const minDist = imgSize * 0.6;
 
             for (let i = 0; i < images.length; i++) {
-                const img = document.createElement('img');
-                img.src = images[i]; img.className = 'photo';
-                img.style.width = imgSize + 'px';
-                img.style.height = imgSize + 'px';
+                let x, y, valid;
+                let attempts = 0;
 
-                let x, y;
                 do {
+                    valid = true;
                     x = Math.random() * window.innerWidth;
                     y = Math.random() * window.innerHeight;
-                } while (x < safeLeft && y < safeTop);
 
+                    if (x < safeLeft && y < safeTop) {
+                        valid = false;
+                        continue;
+                    }
+
+                    for (let pos of positions) {
+                        const dx = x - pos.x;
+                        const dy = y - pos.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < minDist) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    attempts++;
+                } while (!valid && attempts < 200);
+
+                positions.push({x, y});
+                const img = document.createElement('img');
+                img.src = images[i];
+                img.className = 'photo';
+                img.style.width = imgSize + 'px';
+                img.style.height = imgSize + 'px';
                 const rot = (Math.random() - 0.5) * 40;
                 img.style.left = x + 'px';
                 img.style.top = y + 'px';
@@ -180,29 +211,38 @@
             setTimeout(() => {
                 document.querySelectorAll('.photo').forEach(p => p.classList.add('show'));
                 document.querySelectorAll('.nav-link').forEach(item => item.classList.add('show'));
+                startFloatAnimation();
             }, 100);
-
-            startFloatAnimation();
         }
 
-        // 🔥 新特效：气球悬浮漂浮（超好看！）
+        // 🔥 漂浮 + 鼠标引力互动（超级温柔）
         function startFloatAnimation() {
             const photos = document.querySelectorAll('.photo');
-            const floatSpeed = 0.05;
-
+            
             photos.forEach((img, i) => {
-                let dx = (Math.random() - 0.5) * 0.3;
-                let dy = (Math.random() - 0.5) * 0.3;
+                let dx = (Math.random() - 0.5) * 0.25;
+                let dy = (Math.random() - 0.5) * 0.25;
                 let x = 0, y = 0;
+                let fx = 0, fy = 0;
 
                 function float() {
+                    // 自动漂浮
                     x += dx;
                     y += dy;
-                    if (Math.abs(x) > 12) dx *= -1;
-                    if (Math.abs(y) > 12) dy *= -1;
+                    if (Math.abs(x) > 10) dx *= -1;
+                    if (Math.abs(y) > 10) dy *= -1;
 
+                    // 鼠标引力（温柔跟随）
+                    currentMouseX += (mouseX - currentMouseX) * 0.05;
+                    currentMouseY += (mouseY - currentMouseY) * 0.05;
+                    const centerX = window.innerWidth / 2;
+                    const centerY = window.innerHeight / 2;
+                    fx = (currentMouseX - centerX) / 25;
+                    fy = (currentMouseY - centerY) / 25;
+
+                    // 合并动画
                     const base = img.style.transform.replace(/translate\([^)]*\)/g, '').trim();
-                    img.style.transform = `${base} translate(${x}px, ${y}px)`;
+                    img.style.transform = `${base} translate(${x + fx}px, ${y + fy}px)`;
                     requestAnimationFrame(float);
                 }
                 float();
