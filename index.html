@@ -20,7 +20,6 @@
             overflow: hidden;
             background: #ffffff;
             position: relative;
-            -webkit-font-smoothing: antialiased;
         }
 
         .center-text {
@@ -91,7 +90,6 @@
             pointer-events: none;
         }
 
-        /* 全屏铺满无留白 */
         .photo-wrapper {
             position: fixed;
             top: 0;
@@ -103,31 +101,19 @@
             overflow: hidden;
         }
 
-        /* 🔥 终极融合：只裁图片内部 + 超级模糊柔边 + 无任何原图边缘 */
+        /* 🔥 极致柔边，完全融合看不到边界 */
         .photo {
             position: absolute;
-            width: 60vw;
-            height: 60vw;
-            object-fit: none;
+            object-fit: cover;
             opacity: 0;
-            transition: opacity 2s ease;
-            
-            /* 🔥 完全看不到边缘：100%柔和融合 */
-            -webkit-mask-image: radial-gradient(160% 160% at center, black 22%, transparent 70%);
-            mask-image: radial-gradient(160% 160% at center, black 22%, transparent 70%);
-            
-            will-change: transform;
-            animation: idleDrift 26s ease-in-out infinite alternate;
+            transition: opacity 1.8s ease;
+            -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 100%);
+            mask-image: radial-gradient(ellipse at center, black 35%, transparent 100%);
+            transform-origin: center;
         }
 
         .photo.show {
-            opacity: 0.92;
-        }
-
-        /* 指针不动时自动缓慢漂移 */
-        @keyframes idleDrift {
-            0%   { transform: translate(-50%, -50%) rotate(0deg) scale(3) translate(0px, 0px); }
-            100% { transform: translate(-50%, -50%) rotate(0deg) scale(3) translate(42px, 36px); }
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -147,7 +133,7 @@
     <script>
         document.getElementById("email").innerText = "contact" + "@" + "anthvia.com";
 
-        // 自动 a-n 14张图
+        // 自动加载 a~n 14张图
         const images = [];
         const start = 'a'.charCodeAt(0);
         for (let i = 0; i < 14; i++) {
@@ -160,35 +146,42 @@
             setTimeout(initPhotos, 1000);
         }, 5000);
 
-        // 🔥 核心：只裁图片内部 → 无原图边缘
+        // 🔥 智能自适应：10张图 平均铺满全屏
         function initPhotos() {
             const wrapper = document.getElementById('photoWrapper');
-            const count = 6;
-            const selected = images.sort(() => 0.5 - Math.random()).slice(0, count);
+            const total = 10;
+            const selected = images.sort(() => 0.5 - Math.random()).slice(0, total);
 
-            selected.forEach((src, i) => {
+            // 自动网格布局：平均铺满
+            const cols = Math.ceil(Math.sqrt(total));
+            const rows = Math.ceil(total / cols);
+            const cellW = 100 / cols;
+            const cellH = 100 / rows;
+
+            // 🔥 自适应图片尺寸：自动适配屏幕，完美铺满
+            const imgSize = Math.max(window.innerWidth, window.innerHeight) / (Math.sqrt(total) * 0.8);
+
+            selected.forEach((src, index) => {
                 const img = document.createElement('img');
                 img.src = src;
                 img.className = 'photo';
+                img.style.width = imgSize + 'px';
+                img.style.height = imgSize + 'px';
 
-                // 🔥 随机截取图片内部（完全抛弃边缘）
-                const cropX = 10 + Math.random() * 70;
-                const cropY = 10 + Math.random() * 70;
-                img.style.objectPosition = `${cropX}% ${cropY}%`;
+                // 均匀分布
+                const col = index % cols;
+                const row = Math.floor(index / cols);
+                const baseX = col * cellW + cellW * 0.5;
+                const baseY = row * cellH + cellH * 0.5;
 
-                // 均匀全屏分布
-                const step = 100 / count;
-                const baseX = i * step;
-                const posX = Math.min(100, Math.max(0, baseX + Math.random() * step));
-                const posY = Math.min(100, Math.max(0, Math.random() * 100));
-
-                // 极轻微随机角度，不颠倒
-                const rot = (Math.random() * 14) - 7;
+                // 自然随机偏移
+                const posX = baseX + (Math.random() - 0.5) * cellW * 0.4;
+                const posY = baseY + (Math.random() - 0.5) * cellH * 0.4;
+                const rot = (Math.random() * 16) - 8;
 
                 img.style.left = posX + '%';
                 img.style.top = posY + '%';
-                img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(3)`;
-                img.style.animationDelay = `${i * 0.4}s`;
+                img.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
 
                 wrapper.appendChild(img);
             });
@@ -197,33 +190,37 @@
                 document.querySelectorAll('.photo').forEach(p => p.classList.add('show'));
             }, 100);
 
-            initParallax();
+            initSmoothParallax();
         }
 
-        // 鼠标/触摸物理浮动
-        function initParallax() {
+        // 🔥 丝滑物理效果，完全不抽动
+        function initSmoothParallax() {
             const photos = document.querySelectorAll('.photo');
             let mouseX = 0, mouseY = 0;
+            let mx = 0, my = 0;
 
             window.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX / window.innerWidth - 0.5) * 1.4;
-                mouseY = (e.clientY / window.innerHeight - 0.5) * 1.4;
+                mouseX = (e.clientX / window.innerWidth - 0.5);
+                mouseY = (e.clientY / window.innerHeight - 0.5);
             });
 
             window.addEventListener('touchmove', (e) => {
                 if (e.touches.length > 0) {
-                    mouseX = (e.touches[0].clientX / window.innerWidth - 0.5) * 1.4;
-                    mouseY = (e.touches[0].clientY / window.innerHeight - 0.5) * 1.4;
+                    mouseX = (e.touches[0].clientX / window.innerWidth - 0.5);
+                    mouseY = (e.touches[0].clientY / window.innerHeight - 0.5);
                 }
             });
 
             function animate() {
+                mx += (mouseX - mx) * 0.1;
+                my += (mouseY - my) * 0.1;
+
                 photos.forEach((img, i) => {
-                    const speed = 8 + i * 1.8;
-                    const mx = mouseX * speed;
-                    const my = mouseY * speed;
+                    const speed = 7 + i * 1.1;
+                    const moveX = mx * speed;
+                    const moveY = my * speed;
                     const rot = parseFloat(img.style.transform.match(/rotate\((.*?)deg\)/)[1] || 0);
-                    img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(3) translate(${mx}px, ${my}px)`;
+                    img.style.transform = `translate(-50%, -50%) rotate(${rot}deg) translate(${moveX}px, ${moveY}px)`;
                 });
                 requestAnimationFrame(animate);
             }
