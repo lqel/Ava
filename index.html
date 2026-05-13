@@ -19,7 +19,6 @@
             position: relative;
         }
 
-        /* 超级可爱圆润字体 */
         .center-text {
             font-size: 8vw;
             letter-spacing: 0.1em;
@@ -36,7 +35,6 @@
             font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             font-weight: 900;
             
-            /* 渐变彩色文字 */
             background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
             background-size: 300% 300%;
             -webkit-background-clip: text;
@@ -58,11 +56,17 @@
             font-size: 1.8rem;
         }
 
-        /* 🔥 / 动画完全恢复 */
+        /* 🔥 最终修复：/ 完整显示，不截断、不缺失 */
         .slash {
             display: inline-block;
+            font-family: 'Helvetica', 'Arial', sans-serif !important;
             animation: slashSlant 7s ease-in-out infinite;
-            font-family: inherit;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #c9f4ff, #a1c4fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding-bottom: 0.1em;
+            line-height: 1.2 !important;
         }
 
         @keyframes slashSlant {
@@ -74,7 +78,6 @@
             100% { opacity: 1; transform: translate(0, 0); }
         }
 
-        /* 右下角可爱彩色文字 */
         .right-bottom {
             position: absolute;
             right: 2rem;
